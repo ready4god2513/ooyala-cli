@@ -20,7 +20,7 @@ version Ooyala::VERSION
 
 desc 'Ooyala API Key'
 arg_name 'api_key'
-flag [:k,:key], default_value: Ooyala::Config.fetch('name')
+flag [:k,:key], default_value: Ooyala::Config.fetch('key')
 
 desc 'Ooyala API Secret'
 arg_name 'api_secret'
@@ -38,15 +38,40 @@ desc 'Add a live stream'
 command :live do |c|
 
   c.desc 'Add encodings to the stream'
-  c.flag [:e, :encodings], default_value: "1280:720:800;1280:720:1500;1280:720:2500;"
-  c.flag [:n, :name], default_value: "JC Event Live Stream"
-  c.flag [:p, :password], default_value: "2wsx#EDC"
+  c.flag [:e, :encodings], default_value: Ooyala::Config.fetch('encodings')
+
+  c.desc 'Set the name of the stream (will be shown in the player)'
+  c.flag [:n, :name], default_value: Ooyala::Config.fetch('stream')
+
+  c.desc 'Set the password for the stream (set this on the encoder as well)'
+  c.flag [:p, :password], default_value: Ooyala::Config.fetch('streampw')
 
   c.action do |global_options, options, args|
     puts "---Provisioning your stream----"
     stream = Ooyala::LiveStream.new($ooyala, {name: options[:name], password: options[:password]})
     stream.encodings = options[:encodings]
     PP.pp stream.publish
+  end
+end
+
+desc 'Store a configuration setting to be used next time.
+
+  Options are:
+  
+  key
+  secret
+  encodings
+  stream
+  streampw
+'
+command :config do |c|
+
+  c.desc 'Config Name'
+  c.flag [:n, :name]
+  c.flag [:v, :value]
+
+  c.action do |global_options, options, args|
+    Ooyala::Config.set(options[:name], options[:value])
   end
 end
 

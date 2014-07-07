@@ -1,13 +1,13 @@
 # Ensure we require the local version and not one we might have installed already
 require File.join([File.dirname(__FILE__),'lib','ooyala','version.rb'])
 spec = Gem::Specification.new do |s| 
-  s.name = 'ooyala'
+  s.name = 'ooyala-cli'
   s.version = Ooyala::VERSION
-  s.author = 'Your Name Here'
-  s.email = 'your@email.address.com'
-  s.homepage = 'http://your.website.com'
+  s.author = 'Brandon Hansen'
+  s.email = 'bh@jesusculture.com'
+  s.homepage = 'http://resume.aisforarray.com'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'A description of your project'
+  s.summary = 'Interact with the ooyala API via the command line.  A work in progress.'
   s.files = `git ls-files`.split("
 ")
   s.require_paths << 'lib'
