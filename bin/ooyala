@@ -27,10 +27,6 @@ arg_name 'api_secret'
 flag [:s,:secret], default_value: Ooyala::Config.fetch('secret')
 
 pre do |global,command,options,args|
-
-  Ooyala::Config.set('key', global[:key])
-  Ooyala::Config.set('secret', global[:key])
-
   $ooyala = Ooyala::API.new(global[:key], global[:secret])
 end
 
