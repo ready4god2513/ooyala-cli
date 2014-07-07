@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+require 'gli'
+begin # XXX: Remove this begin/rescue before distributing your app
+require 'ooyala'
+require 'pp'
+
+rescue LoadError
+  STDERR.puts "In development, you need to use `bundle exec bin/ooyala` to run your app"
+  STDERR.puts "At install-time, RubyGems will make sure lib, etc. are in the load path"
+  STDERR.puts "Feel free to remove this message from bin/ooyala now"
+  exit 64
+end
+
+include GLI::App
+
+program_desc 'Connect to the Ooyala API with simple commands'
+
+version Ooyala::VERSION
+
+desc 'Ooyala API Key'
+arg_name 'api_key'
+flag [:k,:key], default_value: "FiY3E6K9zr2oEvzAvfj-aAV8n9b3.LvGln"
+
+desc 'Ooyala API Secret'
+arg_name 'api_secret'
+flag [:s,:secret], default_value: "jhzNq-AYWE3gaVv8G6Q-9uozHheiq9ApJABA7QCm"
+
+pre do |global,command,options,args|
+  $ooyala = Ooyala::API.new(global[:key], global[:secret])
+end
+
+desc 'Add a live stream'
+command :live do |c|
+
+  c.desc 'Add encodings to the stream'
+  c.flag [:e, :encodings], default_value: "1280:720:800;1280:720:1500;1280:720:2500;"
+  c.flag [:n, :name], default_value: "JC Event Live Stream"
+  c.flag [:p, :password], default_value: "2wsx#EDC"
+
+  c.action do |global_options, options, args|
+    puts "---Provisioning your stream----"
+    stream = Ooyala::LiveStream.new($ooyala, {name: options[:name], password: options[:password]})
+    stream.encodings = options[:encodings]
+    PP.pp stream.publish
+  end
+end
+
+post do |global,command,options,args|
+  # Post logic here
+  # Use skips_post before a command to skip this
+  # block on that command only
+end
+
+on_error do |exception|
+  # Error logic here
+  # return false to skip default error handling
+  puts exception.inspect
+  true
+end
+
+exit run(ARGV)
