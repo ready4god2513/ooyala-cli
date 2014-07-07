@@ -3,6 +3,7 @@ require 'gli'
 begin # XXX: Remove this begin/rescue before distributing your app
 require 'ooyala'
 require 'pp'
+require 'yaml'
 
 rescue LoadError
   STDERR.puts "In development, you need to use `bundle exec bin/ooyala` to run your app"
@@ -19,13 +20,17 @@ version Ooyala::VERSION
 
 desc 'Ooyala API Key'
 arg_name 'api_key'
-flag [:k,:key], default_value: "FiY3E6K9zr2oEvzAvfj-aAV8n9b3.LvGln"
+flag [:k,:key], default_value: Ooyala::Config.fetch('name')
 
 desc 'Ooyala API Secret'
 arg_name 'api_secret'
-flag [:s,:secret], default_value: "jhzNq-AYWE3gaVv8G6Q-9uozHheiq9ApJABA7QCm"
+flag [:s,:secret], default_value: Ooyala::Config.fetch('secret')
 
 pre do |global,command,options,args|
+
+  Ooyala::Config.set('key', global[:key])
+  Ooyala::Config.set('secret', global[:key])
+
   $ooyala = Ooyala::API.new(global[:key], global[:secret])
 end
 
@@ -54,7 +59,8 @@ end
 on_error do |exception|
   # Error logic here
   # return false to skip default error handling
-  puts exception.inspect
+  puts exception
+  PP.pp exception.backtrace
   true
 end
 
