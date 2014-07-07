@@ -1,6 +1,0 @@
-= ooyala
-
-Describe your project here
-
-:include:ooyala.rdoc
-
