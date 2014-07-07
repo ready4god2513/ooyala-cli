@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ooyala (0.0.1)
+    ooyala-cli (0.0.1)
       gli (= 2.11.0)
       ooyala-v2-api (= 0.0.3)
 
@@ -52,6 +52,6 @@ PLATFORMS
 
 DEPENDENCIES
   aruba
-  ooyala!
+  ooyala-cli!
   rake
   rdoc

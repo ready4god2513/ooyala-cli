@@ -1,5 +1,0 @@
-= ooyala
-
-Generate this with
-    ooyala rdoc
-After you have described your command line interface
